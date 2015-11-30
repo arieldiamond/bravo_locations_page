@@ -1,4 +1,5 @@
 <?php 
+// Register Locations Post Type
 function locations() {
 	$labels = array(
 		'name'                => _x( 'Locations', 'Post Type General Name', 'locations' ),
@@ -40,3 +41,23 @@ function locations() {
 	register_post_type( 'locations', $args );
 }
 add_action( 'init', 'locations', 0 );
+
+// Register Sidebar
+function locations_sidebar() {
+	$args = array(
+		'id'            => 'locations_sidebar',
+		'name'          => __( 'Locations Sidebar', 'locations' ),
+		'class'         => 'locations_sidebar',
+	);
+	register_sidebar( $args );
+}
+add_action( 'widgets_init', 'locations_sidebar' );
+
+// Map Shortcode
+add_shortcode( 'loc_map', 'loc_map' );
+	function loc_map() {
+		$title = get_the_title();
+		$street = get_field('street_address');
+		$state = get_field('city_state_zip');
+		return do_shortcode( "[wc_googlemap title='".$title."' location='".$street.", ".$state."' zoom='12' height='250']");
+	}
